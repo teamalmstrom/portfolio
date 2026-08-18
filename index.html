@@ -584,8 +584,8 @@ class Component extends DCLogic {
   };
 
   componentDidMount() {
-    document.addEventListener('click', this.onZoomClick);
-    document.addEventListener('keydown', this.onZoomKey);
+    // document.addEventListener('click', this.onZoomClick);
+    // document.addEventListener('keydown', this.onZoomKey);
     [[80, 1], [1300, 2], [1900, 3]].forEach(([ms, step]) => {
       this.introTimers.push(setTimeout(() => this.setState({ step }), ms));
     });
@@ -627,8 +627,8 @@ class Component extends DCLogic {
   }
 
   componentWillUnmount() {
-    document.removeEventListener('click', this.onZoomClick);
-    document.removeEventListener('keydown', this.onZoomKey);
+    // document.removeEventListener('click', this.onZoomClick);
+    // document.removeEventListener('keydown', this.onZoomKey);
     if (this.io3) this.io3.disconnect();
     if (this.ioReveal) this.ioReveal.disconnect();
     if (this.timer) clearInterval(this.timer);
