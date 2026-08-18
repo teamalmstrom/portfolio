@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&amp;family=Cormorant+Garamond:wght@400;500;600&amp;family=Barlow+Condensed:wght@600;700&amp;family=Barlow:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #FAFAFA; }
+  a { color: #6B1A2A; }
+  a:hover { color: #45101c; }
+  img { max-width: 100%; }
+  @media (max-width: 900px) {
+    [data-stack] { grid-template-columns: 1fr !important; gap: clamp(22px, 5vw, 40px) !important; }
+    [data-imgs] { grid-template-columns: repeat(2, 1fr) !important; width: 100% !important; }
+    [data-collage] { grid-template-columns: repeat(2, 1fr) !important; }
+    [data-collage] > div { grid-column: span 1 !important; aspect-ratio: 4 / 3 !important; }
+    [data-facts-sec] { height: auto !important; }
+    [data-facts] { gap: 14px !important; padding-top: 26px !important; padding-bottom: 26px !important; }
+    [data-hero] { height: auto !important; min-height: 100svh; padding-top: 96px !important; padding-bottom: 24px !important; }
+    [data-stage] { height: auto !important; aspect-ratio: 1 / 1.1 !important; }
+    [data-step] { width: 100% !important; align-self: stretch !important; margin-left: 0 !important; margin-right: 0 !important; }
+    [data-step] + [data-step] { margin-top: clamp(48px, 9vw, 80px) !important; }
+    [data-node], [data-path], [data-bignum] { display: none !important; }
+    [data-navrow] { padding: 12px 16px !important; }
+    [data-nav] { gap: 14px !important; font-size: 13px !important; }
+  }
+  @keyframes twinkle { 0%,100% { transform: scale(.8) rotate(0deg); } 50% { transform: scale(1.2) rotate(12deg); } }
+</style>
+</helmet>
+<div style="background: #F7F4F1; font-family: Caveat, cursive; color: #3b342c;">
+
+  <div onClick="{{ closeZoom }}" style="position: fixed; inset: 0; z-index: 60; display: {{ zoomDisplay }}; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 5vh 5vw; background: rgba(14, 60, 92, .78); cursor: zoom-out;">
+    {{ zoomImg }}
+    <p style="margin: 0; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(18px, 1.6vw, 26px); color: #FAFAFA;">{{ zoomAlt }}</p>
+  </div>
+
+
+  <nav style="position: fixed; top: 0; left: 0; right: 0; z-index: 40; background: rgba(250, 250, 250, .92); backdrop-filter: blur(6px); border-bottom: 1px solid rgba(44, 74, 82, .18); transition: opacity 1.1s ease-in-out; opacity: {{ navO }};">
+    <div data-navrow="" style="max-width: 1240px; margin: 0 auto; padding: 18px clamp(20px, 4vw, 48px); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-family: 'Cormorant Garamond', serif; color: #2C4A52;">
+      <span style="font-size: 15px; letter-spacing: .16em; text-transform: uppercase;">Tea Malmstrøm</span>
+      <div data-nav="" style="display: flex; gap: clamp(24px, 4vw, 56px); font-size: 15px; letter-spacing: .1em;">
+        <a href="#meg" style="color: #2C4A52; text-decoration: none;">Om</a>
+        <a href="#prosjekter" style="color: #2C4A52; text-decoration: none;">Prosjekter</a>
+        <a href="#kontakt" style="color: #2C4A52; text-decoration: none;">Kontakt</a>
+      </div>
+    </div>
+  </nav>
+
+  <div style="position: fixed; inset: 0; z-index: 30; pointer-events: none; opacity: .05;">
+    <svg width="100%" height="100%" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <filter id="paperGrain"><feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="3" stitchTiles="stitch"></feTurbulence></filter>
+      <rect width="100%" height="100%" filter="url(#paperGrain)"></rect>
+    </svg>
+  </div>
+
+  <section id="skills" data-hero="" ref="{{ skillsWrap }}" style="position: relative; background: linear-gradient(to bottom, #FAFAFA 0%, #F7F4F1 65%, #F5F0EB 100%); height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: max(13vh, 108px) clamp(16px, 3vw, 48px) 0;">
+    <div style="position: absolute; inset: -1px; z-index: 0; pointer-events: none; opacity: .3; background-image: url(assets/silke.jpg); background-size: cover; background-position: center;"></div>
+
+    <h1 style="position: relative; margin: 0; text-align: center; font-family: 'Cormorant Garamond', serif; font-weight: 600; text-transform: uppercase; letter-spacing: .02em; font-size: clamp(34px, 6.2vw, 92px); line-height: 1.05; color: #5C1526; transition: opacity 1.2s ease-in-out, transform 1.4s cubic-bezier(.4,0,.2,1); opacity: {{ titleO }}; transform: {{ titleT }};">Hei, jeg heter Tea</h1>
+
+    <div style="position: relative; margin-top: clamp(2px, .6vh, 10px); text-align: center; font-family: Caveat, cursive; font-weight: 600; color: #000000; font-size: clamp(22px, 3vw, 44px); line-height: 1.2;">
+      <sc-for list="{{ chars }}" as="c" hint-placeholder-count="30"><span style="display: inline-block; white-space: pre; transition: opacity .8s ease-in-out, transform .8s ease-in-out; transition-delay: {{ c.d }}; opacity: {{ c.o }}; transform: {{ c.t }};">{{ c.ch }}</span></sc-for>
+    </div>
+
+    <div ref="{{ stage }}" data-stage="" style="position: relative; width: min(100%, 1500px); height: min(55vh, 740px); aspect-ratio: 1500 / 800; margin-top: clamp(4px, 1.4vh, 22px);">
+
+      <div style="position: absolute; left: 50%; top: 52%; width: 40%; transform: translate(-50%, -50%); z-index: 5;">
+        <img src="assets/meg.png" alt="Illustrasjon av meg ved skrivebordet" style="display: block; width: 100%; height: auto;">
+      </div>
+
+      <div style="position: absolute; left: 12%; top: 22%; width: 15%; transform: translate(-50%, -50%);">
+        <img src="assets/video.png" alt="Lage video og film" style="display: block; width: 100%; height: auto; transition: opacity 1.2s ease-in-out, transform 1.2s cubic-bezier(.25,.9,.3,1); opacity: {{ o0 }}; transform: {{ t0 }};">
+      </div>
+      <span style="position: absolute; left: 5.5%; top: 14%; font-size: clamp(14px, 2.1vh, 26px); color: #F2C232; transition: opacity .6s ease; opacity: {{ o0 }}; animation: twinkle 3s ease-in-out .8s infinite;">✦</span>
+
+      <div style="position: absolute; left: 27.5%; top: 26%; width: 11%; transform: translate(-50%, -50%);">
+        <img src="assets/canva.png" alt="Canva" style="display: block; width: 100%; height: auto; transition: opacity 1.2s ease-in-out, transform 1.2s cubic-bezier(.25,.9,.3,1); opacity: {{ o1 }}; transform: {{ t1 }};">
+      </div>
+
+      <div style="position: absolute; left: 21%; top: 51%; width: 13%; transform: translate(-50%, -50%);">
+        <img src="assets/innholdsproduksjon.png" alt="Innholdsproduksjon" style="display: block; width: 100%; height: auto; transition: opacity 1.2s ease-in-out, transform 1.2s cubic-bezier(.25,.9,.3,1); opacity: {{ o2 }}; transform: {{ t2 }};">
+      </div>
+
+      <div style="position: absolute; left: 13%; top: 79%; width: 11%; transform: translate(-50%, -50%);">
+        <img src="assets/bilder.png" alt="Ta bilder" style="display: block; width: 100%; height: auto; transition: opacity 1.2s ease-in-out, transform 1.2s cubic-bezier(.25,.9,.3,1); opacity: {{ o3 }}; transform: {{ t3 }};">
+      </div>
+      <span style="position: absolute; left: 6%; top: 71%; font-size: clamp(12px, 1.8vh, 22px); color: #F2C232; transition: opacity .6s ease; opacity: {{ o3 }}; animation: twinkle 3.6s ease-in-out .5s infinite;">✦</span>
+
+      <div style="position: absolute; left: 72.5%; top: 24%; width: 15%; transform: translate(-50%, -50%);">
+        <img src="assets/lede-team.png" alt="Lede team" style="display: block; width: 100%; height: auto; transition: opacity 1.2s ease-in-out, transform 1.2s cubic-bezier(.25,.9,.3,1); opacity: {{ o4 }}; transform: {{ t4 }};">
+      </div>
+
+      <div style="position: absolute; left: 88%; top: 32%; width: 13%; transform: translate(-50%, -50%);">
+        <img src="assets/miro-figma.png" alt="Miro og Figma" style="display: block; width: 100%; height: auto; transition: opacity 1.2s ease-in-out, transform 1.2s cubic-bezier(.25,.9,.3,1); opacity: {{ o5 }}; transform: {{ t5 }};">
+      </div>
+
+      <div style="position: absolute; left: 75%; top: 71%; width: 18%; transform: translate(-50%, -50%);">
+        <img src="assets/webutvikling.png" alt="Webutvikling" style="display: block; width: 100%; height: auto; transition: opacity 1.2s ease-in-out, transform 1.2s cubic-bezier(.25,.9,.3,1); opacity: {{ o6 }}; transform: {{ t6 }};">
+      </div>
+
+      <div style="position: absolute; left: 88%; top: 79%; width: 11.5%; transform: translate(-50%, -50%);">
+        <img src="assets/verdi.png" alt="Skape verdi" style="display: block; width: 100%; height: auto; transition: opacity 1.2s ease-in-out, transform 1.2s cubic-bezier(.25,.9,.3,1); opacity: {{ o7 }}; transform: {{ t7 }};">
+      </div>
+      <span style="position: absolute; left: 96%; top: 71%; font-size: clamp(12px, 1.8vh, 22px); color: #F2C232; transition: opacity .6s ease; opacity: {{ o7 }}; animation: twinkle 2.6s ease-in-out .2s infinite;">✧</span>
+
+    </div>
+
+    <div style="position: relative; margin-top: clamp(6px, 1.6vh, 22px); display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: clamp(15px, 2vh, 24px); color: #9a8f80;">
+      <span>bla ned</span>
+      <span style="font-size: 1.2em;">↓</span>
+    </div>
+  </section>
+
+  <section id="om" ref="{{ sec3 }}" style="position: relative; background: linear-gradient(160deg, #DFE7F0 0%, #E6ECF3 55%, #DCE4EE 100%); min-height: 82vh; margin-top: -1px; display: flex; align-items: center; padding: clamp(12px, 2vh, 28px) clamp(20px, 5vw, 80px);">
+    <div style="position: absolute; inset: -1px; z-index: 0; pointer-events: none; opacity: .3; background-image: url(assets/silke.jpg); background-size: cover; background-position: center;"></div>
+    <div data-stack="" style="position: relative; z-index: 1; width: 100%; max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: minmax(260px, 1fr) minmax(320px, 1fr); gap: clamp(32px, 6vw, 90px); align-items: center;">
+      <div style="display: flex; align-items: stretch; justify-content: center; transition: opacity .9s ease-out, transform .9s ease-out; opacity: {{ cardO }}; transform: {{ cardT }};">
+        <img src="assets/kompass.png" alt="Kompass med mål, bruker, verdi og prioritering" style="display: block; width: 100%; max-width: 620px; height: auto;">
+      </div>
+      <div style="text-align: center; transition: opacity .9s ease-out; opacity: {{ line0 }};">
+        <h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(30px, 3.6vw, 58px); line-height: 1.15; color: #12456B; text-wrap: balance;">Der design, teknologi<br>og mennesker møtes</h2>
+        <p style="margin: clamp(20px, 2.6vw, 38px) auto 0; max-width: 46ch; font-family: Barlow, sans-serif; font-size: clamp(16px, 1.4vw, 22px); line-height: 1.85; color: #1b2c3a; text-wrap: pretty; transition: opacity .9s ease-out; opacity: {{ line1 }};">Jeg kombinerer designbakgrunn, teknologiforståelse og ledererfaring for å skape produkter som gir ekte verdi. Trives best i tverrfaglige team, der ulike perspektiver sammen skaper bedre løsninger.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="meg" style="background: #F2EDE8; margin-top: -1px; padding: clamp(24px, 4vh, 56px) clamp(20px, 5vw, 80px) clamp(56px, 10vh, 120px);">
+    <div data-stack="" style="max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: minmax(300px, 1fr) minmax(280px, .9fr); gap: clamp(36px, 6vw, 96px); align-items: stretch;">
+      <div>
+        <p style="margin: 0; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(22px, 2.2vw, 32px); color: #6B1A2A;" data-reveal="">litt om meg</p>
+        <h2 style="margin: 2px 0 clamp(18px, 2.4vw, 30px); font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(38px, 5.4vw, 84px); line-height: 1.02; color: #12456B;" data-reveal="">En uvanlig<br>kombinasjon</h2>
+        <p style="margin: 0 0 1.2em; max-width: 54ch; font-family: Barlow, sans-serif; font-size: clamp(16px, 1.2vw, 19px); line-height: 1.7; color: #23323d; text-wrap: pretty;" data-reveal="">Med én fot i design og én i teknologi har jeg bygget meg en profil som gjør meg effektiv i skjæringspunktet mellom fagfelt. Jeg forstår designerens perspektiv og snakker utviklerens språk.</p>
+        <p style="margin: 0 0 1.2em; max-width: 54ch; font-family: Barlow, sans-serif; font-size: clamp(16px, 1.2vw, 19px); line-height: 1.7; color: #23323d; text-wrap: pretty;" data-reveal="">Bakgrunnen som profesjonell håndballspiller har gitt meg et ekstra lag: jeg er vant til å prestere under press, jobbe i team, og ta lederansvar.</p>
+        <p style="margin: 0; max-width: 54ch; font-family: Barlow, sans-serif; font-size: clamp(16px, 1.2vw, 19px); line-height: 1.7; color: #23323d; text-wrap: pretty;" data-reveal="">Jeg er strukturert, planlegger godt, og er glad i å fasilitere gode prosesser. Men jeg er også pragmatisk, det viktigste er at vi leverer noe som faktisk fungerer for folk.</p>
+
+        <div style="margin: clamp(90px, 16vh, 200px) 0 0; display: flex; flex-direction: column; gap: clamp(14px, 2vh, 24px); font-family: Barlow, sans-serif;">
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 24px; padding-bottom: clamp(10px, 1.4vh, 18px); border-bottom: 1px solid rgba(18, 69, 107, .18);" data-reveal="">
+            <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; font-size: clamp(14px, 1.05vw, 17px); color: #12456B;">Fullfører utdanning</span>
+            <span style="font-size: clamp(15px, 1.15vw, 19px); color: #23323d; text-align: right;">Anvendt datateknologi</span>
+          </div>
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 24px; padding-bottom: clamp(10px, 1.4vh, 18px); border-bottom: 1px solid rgba(18, 69, 107, .18);" data-reveal="">
+            <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; font-size: clamp(14px, 1.05vw, 17px); color: #12456B;">Tidligere utdanning</span>
+            <span style="font-size: clamp(15px, 1.15vw, 19px); color: #23323d; text-align: right;">Faglærer i design, kunst og håndverk</span>
+          </div>
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 24px; padding-bottom: clamp(10px, 1.4vh, 18px); border-bottom: 1px solid rgba(18, 69, 107, .18);" data-reveal="">
+            <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; font-size: clamp(14px, 1.05vw, 17px); color: #12456B;">Erfaring</span>
+            <span style="font-size: clamp(15px, 1.15vw, 19px); color: #23323d; text-align: right;">Produktleder i Politiets IT-enhet</span>
+          </div>
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 24px;" data-reveal="">
+            <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; font-size: clamp(14px, 1.05vw, 17px); color: #12456B;">Deltid</span>
+            <span style="font-size: clamp(15px, 1.15vw, 19px); color: #23323d; text-align: right;">Digital strategi m. Tale Skjølsvik</span>
+          </div>
+        </div>
+
+        <div style="margin: clamp(90px, 16vh, 200px) 0 0;">
+          <p style="margin: 0 0 clamp(18px, 2.4vw, 32px); font-family: Caveat, cursive; font-weight: 600; font-size: clamp(26px, 2.8vw, 40px); color: #3b342c; text-align: center" data-reveal="">noen verktøy jeg bruker</p>
+          <img data-reveal="" src="assets/verktoy.png" alt="Claude og Copilot, Canva, Figma, Miro, Java, GitHub, Notion, Adobe Creative Cloud, VS Code" style="display: block; width: 100%; max-width: 420px; height: auto; margin: 0 auto;">
+        </div>
+      </div>
+      <div style="min-height: 100%;">
+      <div style="position: sticky; top: 16vh; display: flex; justify-content: center;" data-reveal="">
+        <img src="./skjermbilde-2026-08-17-kl-21-53-17-msxniz3t-bgd6.png" alt="Portrett av Tea Malmstrøm" style="display: block; width: 100%; max-width: 420px; height: auto; border-radius: 18px; box-shadow: 0 10px 44px rgba(0,0,0,0.14);">
+      </div>
+      </div>
+    </div>
+
+  </section>
+
+  <section id="fakta" data-facts-sec="" style="position: relative; height: 240px; box-sizing: border-box; margin-top: -1px; background: linear-gradient(to bottom, #F5F0EB 0%, #F7F4F1 40%, #FAFAFA 100%); overflow: hidden;">
+    <div style="position: absolute; inset: -1px; z-index: 0; pointer-events: none; opacity: .3; background-image: url(assets/silke.jpg); background-size: cover; background-position: center;"></div>
+    <div data-imgs="" style="position: relative; z-index: 1; height: 100%; max-width: 1500px; margin: 0 auto; padding: 22px clamp(20px, 5vw, 80px) 18px; box-sizing: border-box; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(24px, 5vw, 90px); align-items: stretch;" data-facts="">
+
+      <div style="display: flex; flex-direction: column; align-items: center; height: 100%; min-height: 0;" data-reveal="">
+        <p style="margin: 0; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(15px, 1.2vw, 20px); line-height: 1; color: #3b342c;">rolle</p>
+        <p style="margin: 6px 0 0; font-family: Barlow, sans-serif; font-weight: 700; font-size: clamp(18px, 1.7vw, 26px); line-height: 1.1; color: #6B1A2A;">Produktleder</p>
+        <div style="flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; margin-top: 8px; min-height: 0;">
+          <img src="assets/rolle.png" alt="Produktleder: tidslinje, kompass og team" style="display: block; max-width: 100%; max-height: 120px; width: auto; height: auto; object-fit: contain;">
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; align-items: center; height: 100%;" data-reveal="">
+        <p style="margin: 0; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(15px, 1.2vw, 20px); line-height: 1; color: #3b342c;">utdanning</p>
+        <p style="margin: 6px 0 0; font-family: Barlow, sans-serif; font-weight: 700; font-size: clamp(18px, 1.7vw, 26px); line-height: 1.1; color: #6B1A2A;">2 x bachelor</p>
+        <div style="flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; margin-top: 8px; min-height: 0;">
+          <img src="assets/utdanning.png" alt="To bachelorgrader: diplomer, bøker og studenthatt" style="display: block; max-width: 100%; max-height: 120px; width: auto; height: auto; object-fit: contain;">
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; align-items: center; height: 100%;" data-reveal="">
+        <p style="margin: 0; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(15px, 1.2vw, 20px); line-height: 1; color: #3b342c;">base</p>
+        <p style="margin: 6px 0 0; font-family: Barlow, sans-serif; font-weight: 700; font-size: clamp(18px, 1.7vw, 26px); line-height: 1.1; color: #6B1A2A;">Oslo</p>
+        <div style="flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; margin-top: 8px; min-height: 0;">
+          <img src="assets/oslo.png" alt="Oslo: operahuset ved fjorden" style="display: block; max-width: 100%; max-height: 120px; width: auto; height: auto; object-fit: contain;">
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="prosjekter" style="position: relative; background: #FAFAFA; margin-top: -1px; padding: clamp(48px, 8vh, 96px) clamp(20px, 5vw, 80px) clamp(56px, 9vh, 110px);">
+    <div style="max-width: 1500px; margin: 0 auto;">
+      <h2 style="margin: 0; padding-bottom: clamp(14px, 2vh, 24px); border-bottom: 1px solid rgba(18, 69, 107, .35); font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(28px, 3vw, 46px); line-height: 1; color: #12456B;" data-reveal="">Utvalgte arbeider</h2>
+
+      <div style="position: relative; margin-top: clamp(28px, 5vh, 60px); padding-left: clamp(0px, 7vw, 120px);">
+        <div aria-hidden="true" data-bignum="" style="position: absolute; left: 0; top: 0; height: 100%; display: flex; align-items: flex-start; pointer-events: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(220px, 34vw, 560px); line-height: .78; color: transparent; -webkit-text-stroke: 2px rgba(18, 69, 107, .12);">1</div>
+
+        <div style="position: relative;">
+          <h3 style="margin: 0; font-family: Barlow, sans-serif; font-weight: 700; font-size: clamp(28px, 3.2vw, 50px); line-height: 1.1; color: #6B1A2A; text-wrap: balance;" data-reveal="">Innsiktsverktøy for designsystem</h3>
+          <p style="margin: clamp(8px, 1.2vh, 14px) 0 0; font-family: Barlow, sans-serif; font-size: clamp(16px, 1.5vw, 24px); line-height: 1.3; color: #8a8a8a;" data-reveal="">Produktleder · Politiets IT-enhet · Sommer 2026</p>
+
+          <div data-stack="" style="margin-top: clamp(26px, 4.5vh, 54px); display: grid; grid-template-columns: minmax(280px, .85fr) minmax(320px, 1.15fr); gap: clamp(28px, 5vw, 72px); align-items: start;">
+            <div style="display: flex; flex-direction: column; gap: 1.4em; font-family: Barlow, sans-serif; font-size: clamp(16px, 1.35vw, 22px); line-height: 1.55; color: #23323d; text-wrap: pretty;" data-reveal="">
+              <p style="margin: 0;">Politiets designsystemteam manglet oversikt over hvem som brukte systemet og hvilke komponenter som ble tatt i bruk.</p>
+              <p style="margin: 0;">Vi utforsket behovet og utviklet et datadrevet dashboard. Som produktleder skapte jeg retning, struktur og fremdrift for et team på seks.</p>
+            </div>
+            <div style="display: flex; justify-content: center;" data-reveal="">
+              <img src="assets/prosjekt-1.png" alt="Produktleder ved skrivebord med dashboard og grafer" style="display: block; width: 100%; max-width: 820px; height: auto;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="prosess" ref="{{ prosess }}" style="position: relative; background: #FAFAFA; margin-top: -1px; padding: clamp(20px, 4vh, 48px) clamp(16px, 4vw, 64px) clamp(60px, 10vh, 130px); overflow: hidden;">
+    <div style="position: relative; max-width: 1080px; margin: 0 auto;">
+
+      <svg aria-hidden="true" data-path="" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible;">
+        <path ref="{{ pathEl }}" d="{{ pathD }}" fill="none" stroke="#0E3C5C" stroke-width="3" stroke-linecap="round" stroke-dasharray="{{ pathLen }}" stroke-dashoffset="{{ pathOff }}"></path>
+      </svg>
+
+      <div data-track="" style="position: relative; display: flex; flex-direction: column;">
+
+        <div data-step="" style="position: relative; align-self: flex-start; width: min(100%, 620px); margin-left: clamp(56px, 13%, 140px); padding-top: 8px;" data-reveal="">
+          <div data-node="" style="position: absolute; left: clamp(-58px, -8vw, -80px); top: 30px; width: 56px; height: 56px; border-radius: 50%; background: #0E3C5C; color: #FAFAFA; display: flex; align-items: center; justify-content: center; font-family: Barlow, sans-serif; font-weight: 700; font-size: 26px;">1</div>
+          <p style="margin: 0 0 2px; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(17px, 1.5vw, 22px); color: #6B1A2A;">klikk på bildene for å se de større</p>
+          <h3 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(26px, 2.7vw, 42px); line-height: 1.1; color: #0E3C5C;">Forstå, utforske og definere</h3>
+          <p style="margin: 10px 0 0; font-family: Barlow, sans-serif; font-size: clamp(14px, 1.05vw, 17px); line-height: 1.9; color: #23323d; text-wrap: pretty;">Vi utforsket brukerbehov, brukerreise og smertepunkter, samtidig som vi etablerte trygghet, arbeidsform og en god rytme i teamet. Innsikten gjorde at vi kunne omdefinere oppgaven i en bedre retning.</p>
+          <div data-imgs="" style="margin: 26px 0 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; width: min(940px, 76vw);">
+            <div>
+              <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff;"><img data-zoomable="" src="assets/p1-ukesplan.png" alt="Ukesplan for teamet" style="display: block; width: 100%; height: 100%; object-fit: contain; filter: blur(0.25px); cursor: zoom-in;"></div>
+              <p style="margin: 8px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(15px, 1.2vw, 19px); color: #0E3C5C;">ukesplan</p>
+            </div>
+            <div>
+              <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff;"><img data-zoomable="" src="assets/p1-brukerreise.png" alt="Brukerreise for komponenter" style="display: block; width: 100%; height: 100%; object-fit: contain; filter: blur(0.25px); cursor: zoom-in;"></div>
+              <p style="margin: 8px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(15px, 1.2vw, 19px); color: #0E3C5C;">brukerreise</p>
+            </div>
+            <div>
+              <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff;"><img data-zoomable="" src="assets/p1-teamcanvas.png" alt="Team canvas" style="display: block; width: 100%; height: 100%; object-fit: contain; filter: blur(0.25px); cursor: zoom-in;"></div>
+              <p style="margin: 8px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(15px, 1.2vw, 19px); color: #0E3C5C;">team canvas</p>
+            </div>
+          </div>
+        </div>
+
+        <div data-step="" style="position: relative; align-self: flex-end; width: min(100%, 620px); margin-right: clamp(80px, 14%, 220px); margin-top: clamp(300px, 32vh, 420px);" data-reveal="">
+          <div data-node="" style="position: absolute; right: clamp(-64px, -7vw, -86px); top: -66px; width: 56px; height: 56px; border-radius: 50%; background: #0E3C5C; color: #FAFAFA; display: flex; align-items: center; justify-content: center; font-family: Barlow, sans-serif; font-weight: 700; font-size: 26px;">2</div>
+          <h3 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(26px, 2.7vw, 42px); line-height: 1.1; color: #0E3C5C;">Prioritere og skape idéer</h3>
+          <p style="margin: 10px 0 0; font-family: Barlow, sans-serif; font-size: clamp(14px, 1.05vw, 17px); line-height: 1.9; color: #23323d; text-wrap: pretty;">Behov sorteres etter viktighet og hyppighet. Teamet idégenererer og skisser sammen.</p>
+          <div style="margin: 26px 0 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px;">
+            <div>
+              <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff;"><img data-zoomable="" src="assets/p2-sortere-behov.jpg" alt="Whiteboard med brukerbehov sortert etter viktighet og hyppighet" style="display: block; width: 100%; height: 100%; object-fit: cover; filter: blur(0.25px); cursor: zoom-in;"></div>
+              <p style="margin: 8px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(15px, 1.2vw, 19px); color: #0E3C5C;">sortere behov</p>
+            </div>
+            <div>
+              <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff;"><img data-zoomable="" src="assets/p2-skisser.png" alt="Papirskisser fra idégenerering" style="display: block; width: 100%; height: 100%; object-fit: cover; filter: blur(0.25px); cursor: zoom-in;"></div>
+              <p style="margin: 8px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(15px, 1.2vw, 19px); color: #0E3C5C;">skisser</p>
+            </div>
+          </div>
+        </div>
+
+        <div data-step="" style="position: relative; align-self: flex-start; width: min(100%, 620px); margin-left: clamp(56px, 10%, 110px); margin-top: clamp(300px, 32vh, 420px);" data-reveal="">
+          <div data-node="" style="position: absolute; left: clamp(-58px, -8vw, -80px); top: -4px; width: 56px; height: 56px; border-radius: 50%; background: #0E3C5C; color: #FAFAFA; display: flex; align-items: center; justify-content: center; font-family: Barlow, sans-serif; font-weight: 700; font-size: 26px;">3</div>
+          <h3 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(26px, 2.7vw, 42px); line-height: 1.1; color: #0E3C5C;">Design ↔ utvikling ↔ test</h3>
+          <p style="margin: 10px 0 0; font-family: Barlow, sans-serif; font-size: clamp(14px, 1.05vw, 17px); line-height: 1.9; color: #23323d; text-wrap: pretty;">Ikke tre separate steg, men en iterativ sløyfe. Datakilder, visualiseringer og konsepter testes tidlig, deretter testes helheten</p>
+          <div data-imgs="" style="margin: 26px 0 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; width: min(940px, 76vw);">
+            <div>
+              <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff;"><img data-zoomable="" src="assets/p3-komponenter.png" alt="Enkeltkomponenter i utvikling" style="display: block; width: 100%; height: 100%; object-fit: cover; filter: blur(0.25px); cursor: zoom-in;"></div>
+              <p style="margin: 8px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(15px, 1.2vw, 19px); color: #0E3C5C;">enkelt komponenter</p>
+            </div>
+            <div>
+              <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff;"><img data-zoomable="" src="assets/p3-layout.png" alt="Layoutskisser i Figma" style="display: block; width: 100%; height: 100%; object-fit: cover; filter: blur(0.25px); cursor: zoom-in;"></div>
+              <p style="margin: 8px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(15px, 1.2vw, 19px); color: #0E3C5C;">layout skisser</p>
+            </div>
+            <div>
+              <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff;"><img data-zoomable="" src="assets/p3-testing.png" alt="Testing og iterasjoner" style="display: block; width: 100%; height: 100%; object-fit: cover; filter: blur(0.25px); cursor: zoom-in;"></div>
+              <p style="margin: 8px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(15px, 1.2vw, 19px); color: #0E3C5C;">testing og iterasjoner</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="position: relative; align-self: center; width: min(100%, 620px); margin-left: clamp(0px, 8%, 120px); margin-top: clamp(320px, 34vh, 440px);" data-reveal="">
+          <div data-node="" style="position: absolute; left: clamp(-58px, -8vw, -80px); top: -4px; width: 56px; height: 56px; border-radius: 50%; background: #0E3C5C; color: #FAFAFA; display: flex; align-items: center; justify-content: center; font-family: Barlow, sans-serif; font-weight: 700; font-size: 26px;">4</div>
+          <h3 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(26px, 2.7vw, 42px); line-height: 1.1; color: #0E3C5C;">Fra prototype til ferdig produkt</h3>
+          <p style="margin: 10px 0 0; font-family: Barlow, sans-serif; font-size: clamp(14px, 1.05vw, 17px); line-height: 1.9; color: #23323d; text-wrap: pretty;">Delene kobles sammen og testes som en helhet. Testfunnene brukes til å justere, prioritere og ferdigstille produktet.</p>
+          <div style="margin: 26px 0 0; width: min(301px, 24vw); aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff;"><img data-zoomable="" src="assets/p4-dashbord.png" alt="Ferdig dashbord: Sheriff i tall" style="display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; filter: blur(0.25px); cursor: zoom-in;"></div>
+        </div>
+
+        <div data-step="" style="position: relative; align-self: flex-start; width: min(100%, 620px); margin-left: clamp(56px, 18%, 200px); margin-top: clamp(320px, 34vh, 440px);" data-reveal="">
+          <div data-node="" style="position: absolute; left: clamp(-58px, -8vw, -80px); top: -4px; width: 56px; height: 56px; border-radius: 50%; background: #0E3C5C; color: #FAFAFA; display: flex; align-items: center; justify-content: center; font-family: Barlow, sans-serif; font-weight: 700; font-size: 26px;">5</div>
+          <h3 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(26px, 2.7vw, 42px); line-height: 1.1; color: #0E3C5C;">Handover</h3>
+          <p style="margin: 10px 0 0; font-family: Barlow, sans-serif; font-size: clamp(14px, 1.05vw, 17px); line-height: 1.9; color: #23323d; text-wrap: pretty;">Kunnskap, beslutninger og videre ansvar overføres slik at produktet kan forvaltes og utvikles videre.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="rolle" style="position: relative; background: linear-gradient(150deg, #DFE7F0 0%, #E6ECF3 60%, #DCE4EE 100%); margin-top: -1px; padding: clamp(48px, 9vh, 110px) clamp(20px, 5vw, 80px);">
+    <div style="position: absolute; inset: -1px; z-index: 0; pointer-events: none; opacity: .3; background-image: url(assets/silke.jpg); background-size: cover; background-position: center;"></div>
+    <div data-stack="" style="position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: minmax(280px, 1fr) minmax(280px, .8fr); gap: clamp(28px, 4vw, 60px); align-items: center;">
+
+      <div data-collage="" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; align-items: start;" data-reveal="">
+        <div style="grid-column: span 2; aspect-ratio: 10 / 3; border: 1px solid rgba(18,69,107,.22); background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/r-tidslinje.png" alt="Fem dokumenter: team, ansatte i PIT, PIT, politiet, samfunnet" style="display: block; width: 100%; height: 100%; object-fit: contain; filter: blur(0.25px); cursor: zoom-in;"></div>
+        <div style="grid-column: span 1; aspect-ratio: 4 / 3; border: 1px solid rgba(18,69,107,.22); background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/r-tavle.png" alt="Arbeidstavle med hypoteser og målinger" style="display: block; width: 100%; height: 100%; object-fit: contain; filter: blur(0.25px); cursor: zoom-in;"></div>
+        <div style="grid-column: span 1; aspect-ratio: 4 / 3; border: 1px solid rgba(18,69,107,.22); background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/r-handen.png" alt="Retro: hvilken finger gjør mest vondt akkurat nå" style="display: block; width: 100%; height: 100%; object-fit: contain; filter: blur(0.25px); cursor: zoom-in;"></div>
+        <div style="grid-column: span 2; aspect-ratio: 10 / 3; border: 1px solid rgba(18,69,107,.22); background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/r-oppna-mvp.png" alt="Tidslinje med teknologi, mål og brukerinnsikt" style="display: block; width: 100%; height: 100%; object-fit: contain; filter: blur(0.25px); cursor: zoom-in;"></div>
+        <div style="grid-column: span 1; aspect-ratio: 4 / 3; border: 1px solid rgba(18,69,107,.22); background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/r-seilbat.png" alt="Seilbåt-retro" style="display: block; width: 100%; height: 100%; object-fit: contain; filter: blur(0.25px); cursor: zoom-in;"></div>
+        <div style="grid-column: span 1; aspect-ratio: 4 / 3; border: 1px solid rgba(18,69,107,.22); background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/r-kultur.png" alt="Hva prøver vi å oppnå og MVP" style="display: block; width: 100%; height: 100%; object-fit: contain; filter: blur(0.25px); cursor: zoom-in;"></div>
+        <div style="grid-column: span 2; aspect-ratio: 10 / 3; border: 1px solid rgba(18,69,107,.22); background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/r-mandag.png" alt="Roadmap for prosjektet" style="display: block; width: 100%; height: 100%; object-fit: contain; filter: blur(0.25px); cursor: zoom-in;"></div>
+        <div style="grid-column: span 1; aspect-ratio: 4 / 3; border: 1px solid rgba(18,69,107,.22); background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/r-slides.png" alt="Monday commitments, mandag 27.07" style="display: block; width: 100%; height: 100%; object-fit: contain; filter: blur(0.25px); cursor: zoom-in;"></div>
+        <div style="grid-column: span 1; aspect-ratio: 4 / 3; border: 1px solid rgba(18,69,107,.22); background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/r-moro-nyttig.png" alt="Retro: moro og nyttig" style="display: block; width: 100%; height: 100%; object-fit: contain; filter: blur(0.25px); cursor: zoom-in;"></div>
+        <div style="grid-column: span 2; aspect-ratio: 10 / 3; border: 1px solid rgba(18,69,107,.22); background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/r-morgenmote.png" alt="Morgenmøte: Monday commit" style="display: block; width: 100%; height: 100%; object-fit: contain; filter: blur(0.25px); cursor: zoom-in;"></div>
+        <div style="grid-column: span 1; aspect-ratio: 4 / 3; border: 1px solid rgba(18,69,107,.22); background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/r-papirtavle.png" alt="Papirtavle: problemer, prioritere og målformulere" style="display: block; width: 100%; height: 100%; object-fit: contain; filter: blur(0.25px); cursor: zoom-in;"></div>
+        <div style="grid-column: span 1; aspect-ratio: 4 / 3; border: 1px solid rgba(18,69,107,.22); background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/r-likte-lerte.png" alt="Retro: likte, lærte, savnet" style="display: block; width: 100%; height: 100%; object-fit: contain; filter: blur(0.25px); cursor: zoom-in;"></div>
+        <div style="grid-column: span 2; aspect-ratio: 10 / 3; border: 1px solid rgba(18,69,107,.22); background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/r-roadmap.png" alt="Workshop om team og kultur" style="display: block; width: 100%; height: 100%; object-fit: contain; filter: blur(0.25px); cursor: zoom-in;"></div>
+      </div>
+
+      <div data-reveal="">
+        <p style="margin: 0 0 4px; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(20px, 2vw, 30px); color: #6B1A2A;">rollen som produktleder</p>
+        <h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(44px, 6vw, 96px); line-height: .98; color: #12456B;">min rolle<br>og bidrag</h2>
+        <p style="margin: clamp(22px, 3vh, 40px) 0 0; max-width: 42ch; font-family: 'Cormorant Garamond', serif; font-size: clamp(19px, 1.7vw, 27px); line-height: 1.55; color: #1b2c3a; text-wrap: pretty;">Som produktleder skapte jeg retning og fremdrift gjennom tydelige prioriteringer, roadmap og felles mål. Jeg fasiliterte målmøter, retroer og Monday Commitments, og deltok i innsiktsarbeid, testing og idégenerering. Vi brukte verdikjeden, løsningshypoteser, confidence score og risikohånden til å prioritere læring, redusere usikkerhet og sikre verdiskaping innenfor det juridiske handlingsrommet.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="prosjekt-2" style="position: relative; background: #F7F4F1; margin-top: -1px; padding: clamp(48px, 8vh, 96px) clamp(20px, 5vw, 80px) clamp(56px, 9vh, 110px);">
+    <div style="max-width: 1500px; margin: 0 auto;">
+      <div style="position: relative; padding-left: clamp(0px, 7vw, 120px);">
+        <div aria-hidden="true" data-bignum="" style="position: absolute; left: 0; top: 0; height: 100%; display: flex; align-items: flex-start; pointer-events: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(220px, 34vw, 560px); line-height: .78; color: transparent; -webkit-text-stroke: 2px rgba(18, 69, 107, .12);">2</div>
+
+        <div style="position: relative;">
+          <h3 style="margin: 0; max-width: 22ch; font-family: Barlow, sans-serif; font-weight: 700; font-size: clamp(28px, 3.2vw, 50px); line-height: 1.1; color: #6B1A2A; text-wrap: balance;" data-reveal="">Digital tilstedeværelse for Professor Tale Skjølsvik</h3>
+          <p style="margin: clamp(8px, 1.2vh, 14px) 0 0; font-family: Barlow, sans-serif; font-size: clamp(16px, 1.5vw, 24px); line-height: 1.3; color: #8a8a8a;" data-reveal="">Prosjektleder · Studentprosjekt · Vår 2026</p>
+
+          <div data-stack="" style="margin-top: clamp(26px, 4.5vh, 54px); display: grid; grid-template-columns: minmax(280px, .8fr) minmax(320px, 1.2fr); gap: clamp(28px, 5vw, 72px); align-items: center;">
+            <div style="display: flex; flex-direction: column; gap: 1.4em; font-family: Barlow, sans-serif; font-size: clamp(16px, 1.35vw, 22px); line-height: 1.55; color: #23323d; text-wrap: pretty;" data-reveal="">
+              <p style="margin: 0;">Verdistrategipodden, en faglig podkast om strategi og ledelse, hadde spredt digital tilstedeværelse uten en samlet visuell identitet eller tydelig profil i sosiale medier. Vi ble bedt om å hjelpe podkasten å nå flere.</p>
+              <p style="margin: 0;">Som prosjektleder koordinerte jeg et team gjennom hele prosessen: fra innsiktsarbeid og merkevarebygging til innholdsproduksjon og publisering på tvers av plattformer.</p>
+            </div>
+            <div style="display: flex; justify-content: center;" data-reveal="">
+              <img src="assets/prosjekt-2.png" alt="Prosjektleder med visuell identitet, innholdsplan og profil for podkasten" style="display: block; width: 100%; max-width: 900px; height: auto;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="prosjekt-2-galleri" style="position: relative; background: #F7F4F1; margin-top: -1px; padding: clamp(20px, 4vh, 48px) clamp(20px, 5vw, 80px) clamp(60px, 10vh, 120px);">
+    <div style="max-width: 1300px; margin: 0 auto;">
+      <p style="margin: 0 0 clamp(16px, 2.4vh, 28px); font-family: Caveat, cursive; font-weight: 600; font-size: clamp(18px, 1.6vw, 24px); color: #6B1A2A;" data-reveal="">klikk på bildene for å se de større</p>
+      <div data-imgs="" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(18px, 2.5vw, 36px);" data-reveal="">
+        <div>
+          <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/p2-ideer.png" alt="Idégenerering: tankekart over idéer" style="display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; cursor: zoom-in;"></div>
+          <p style="margin: 10px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(17px, 1.5vw, 24px); color: #0E3C5C;">idégenerering</p>
+        </div>
+        <div>
+          <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/p2-identitet.png" alt="Visuell identitet: farger, typografi og maler" style="display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; cursor: zoom-in;"></div>
+          <p style="margin: 10px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(17px, 1.5vw, 24px); color: #0E3C5C;">visuell identitet</p>
+        </div>
+        <div>
+          <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/p2-milepael.png" alt="Milepælsplan uke for uke" style="display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; cursor: zoom-in;"></div>
+          <p style="margin: 10px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(17px, 1.5vw, 24px); color: #0E3C5C;">milepælsplan</p>
+        </div>
+        <div>
+          <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/p2-publisering.png" alt="Publiseringsplan for mars" style="display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; cursor: zoom-in;"></div>
+          <p style="margin: 10px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(17px, 1.5vw, 24px); color: #0E3C5C;">publiseirngsplan</p>
+        </div>
+      </div>
+      <div data-imgs="" style="margin: clamp(24px, 4vh, 48px) auto 0; width: min(100%, 75%); display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(18px, 2.5vw, 36px);" data-reveal="">
+        <div>
+          <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/p2-linktree.png" alt="Linktree-profil" style="display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; cursor: zoom-in;"></div>
+          <p style="margin: 10px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(17px, 1.5vw, 24px); color: #0E3C5C;">LinkTree</p>
+        </div>
+        <div>
+          <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/p2-tiktok.png" alt="TikTok-profil" style="display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; cursor: zoom-in;"></div>
+          <p style="margin: 10px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(17px, 1.5vw, 24px); color: #0E3C5C;">TikTok</p>
+        </div>
+        <div>
+          <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/p2-instagram.png" alt="Instagram-profil" style="display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; cursor: zoom-in;"></div>
+          <p style="margin: 10px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(17px, 1.5vw, 24px); color: #0E3C5C;">Instagram</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="prosjekt-3" style="position: relative; background: #F7F4F1; margin-top: -1px; padding: clamp(48px, 8vh, 96px) clamp(20px, 5vw, 80px) clamp(60px, 10vh, 120px);">
+    <div style="max-width: 1300px; margin: 0 auto;">
+      <div style="position: relative; padding-left: clamp(0px, 7vw, 120px);">
+        <div aria-hidden="true" data-bignum="" style="position: absolute; left: 0; top: 0; height: 100%; display: flex; align-items: flex-start; pointer-events: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(220px, 34vw, 560px); line-height: .78; color: transparent; -webkit-text-stroke: 2px rgba(18, 69, 107, .12);">3</div>
+
+        <div style="position: relative;">
+          <h3 style="margin: 0; font-family: Barlow, sans-serif; font-weight: 700; font-size: clamp(28px, 3.2vw, 50px); line-height: 1.1; color: #6B1A2A; text-wrap: balance;" data-reveal="">Prep'N'Plate: mobilapp for matsvinn</h3>
+          <p style="margin: clamp(8px, 1.2vh, 14px) 0 0; font-family: Barlow, sans-serif; font-size: clamp(16px, 1.5vw, 24px); line-height: 1.3; color: #8a8a8a;" data-reveal="">Prosjektleder · Studentprosjekt · Høst 2025</p>
+
+          <div data-stack="" style="margin-top: clamp(22px, 3.5vh, 42px); display: grid; grid-template-columns: minmax(260px, .8fr) minmax(300px, 1.1fr); gap: clamp(28px, 5vw, 72px); align-items: center;">
+            <div style="display: flex; flex-direction: column; gap: 1.4em; font-family: Barlow, sans-serif; font-size: clamp(16px, 1.35vw, 22px); line-height: 1.55; color: #23323d; text-wrap: pretty;" data-reveal="">
+              <p style="margin: 0;">Prep'N'Plate er en mobilapp som genererer personlige oppskrifter basert på det brukeren allerede har hjemme, med strekkodeskanning, bildegjenkjenning og en sparekalkulator.</p>
+              <p style="margin: 0;">Som prosjektleder i et team på fem ledet jeg prosessen fra første innsiktsarbeid til ferdige high-fidelity prototyper i Figma.</p>
+            </div>
+            <div style="display: flex; justify-content: center;" data-reveal="">
+              <img src="assets/prosjekt-3.png" alt="Prosjektleder med personas, flyter, wireframes og Prep'N'Plate-appen" style="display: block; width: 100%; max-width: 700px; height: auto;">
+            </div>
+          </div>
+
+          <p style="margin: clamp(40px, 7vh, 80px) 0 clamp(16px, 2.4vh, 28px); font-family: Caveat, cursive; font-weight: 600; font-size: clamp(18px, 1.6vw, 24px); color: #6B1A2A;" data-reveal="">klikk på bildene for å se de større</p>
+          <div data-imgs="" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(18px, 2.5vw, 36px);" data-reveal="">
+        <div>
+          <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/p3-persona.png" alt="User persona: Kari Hansen" style="display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; cursor: zoom-in;"></div>
+          <p style="margin: 10px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(17px, 1.5vw, 24px); color: #0E3C5C;">user persona</p>
+        </div>
+        <div>
+          <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/p3-empathy.png" alt="Empathy map for primær persona" style="display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; cursor: zoom-in;"></div>
+          <p style="margin: 10px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(17px, 1.5vw, 24px); color: #0E3C5C;">empathy map</p>
+        </div>
+        <div>
+          <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/p3-usecase.png" alt="Use case-diagram" style="display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; cursor: zoom-in;"></div>
+          <p style="margin: 10px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(17px, 1.5vw, 24px); color: #0E3C5C;">use case</p>
+        </div>
+        <div>
+          <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/p3-usecase2.png" alt="Use case-diagram, versjon 2" style="display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; cursor: zoom-in;"></div>
+          <p style="margin: 10px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(17px, 1.5vw, 24px); color: #0E3C5C;">use case</p>
+        </div>
+          </div>
+          <div data-imgs="" style="margin: clamp(24px, 4vh, 48px) 0 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(18px, 2.5vw, 36px);" data-reveal="">
+        <div>
+          <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/p3-lofi.png" alt="Low-fidelity skisser" style="display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; cursor: zoom-in;"></div>
+          <p style="margin: 10px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(17px, 1.5vw, 24px); color: #0E3C5C;">low-fidelity skisser</p>
+        </div>
+        <div>
+          <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/p3-taskflow.png" alt="Task flow for kamerascanning" style="display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; cursor: zoom-in;"></div>
+          <p style="margin: 10px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(17px, 1.5vw, 24px); color: #0E3C5C;">task flow</p>
+        </div>
+        <div>
+          <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/p3-prototype.png" alt="High-fidelity prototype i Figma" style="display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; cursor: zoom-in;"></div>
+          <p style="margin: 10px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(17px, 1.5vw, 24px); color: #0E3C5C;">prototype, figma</p>
+        </div>
+        <div>
+          <div style="aspect-ratio: 4 / 3; border: 2px solid #2b3a45; border-radius: 3px; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center;"><img data-zoomable="" src="assets/p3-cover.png" alt="Prep’N’Plate på mobil, nettbrett og laptop" style="display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; cursor: zoom-in;"></div>
+          <p style="margin: 10px 0 0; text-align: center; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(17px, 1.5vw, 24px); color: #0E3C5C;">nettside og app</p>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer id="kontakt" style="position: relative; background: linear-gradient(105deg, #2C4A61 0%, #33566E 55%, #2A4457 100%); padding: clamp(28px, 5vh, 56px) clamp(20px, 5vw, 80px);">
+    <div style="max-width: 1300px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: clamp(20px, 4vw, 48px);">
+      <div>
+        <p style="margin: 0; font-family: Caveat, cursive; font-weight: 600; font-size: clamp(17px, 1.5vw, 22px); color: rgba(250,250,250,.8);">si hei</p>
+        <p style="margin: 2px 0 0; font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: clamp(28px, 3vw, 44px); line-height: 1; color: #FAFAFA;">Ta kontakt</p>
+      </div>
+      <div style="display: flex; align-items: center; gap: clamp(12px, 1.6vw, 20px); font-family: Barlow, sans-serif;">
+        <a href="mailto:tea_elise@hotmail.com" style="padding: 12px 20px; border-radius: 6px; background: rgba(250,250,250,.14); color: #FAFAFA; text-decoration: none; font-size: clamp(14px, 1.1vw, 17px);">tea_elise@hotmail.com</a>
+        <a href="https://www.linkedin.com/in/teaelisemalmstrom" target="_blank" rel="noopener" style="padding: 12px 24px; border-radius: 6px; background: #E7E3DE; color: #23323d; text-decoration: none; font-weight: 600; font-size: clamp(14px, 1.1vw, 17px);">LinkedIn</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;staggerMs&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:260,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:60,&quot;max&quot;:800,&quot;step&quot;:20,&quot;unit&quot;:&quot;ms&quot;,&quot;section&quot;:&quot;Animasjon&quot;},&quot;riseDistance&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:22,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:0,&quot;max&quot;:80,&quot;step&quot;:2,&quot;unit&quot;:&quot;px&quot;,&quot;section&quot;:&quot;Animasjon&quot;},&quot;popScale&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:1.07,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:1,&quot;max&quot;:1.25,&quot;step&quot;:0.01,&quot;section&quot;:&quot;Animasjon&quot;}}">
+class Component extends DCLogic {
+  state = { n: 0, settled: 0, step: 0 };
+  introTimers = [];
+  sec3 = React.createRef();
+  skillsWrap = React.createRef();
+  stage = React.createRef();
+
+  revealOm = () => {
+    if (this.omShown) return;
+    this.omShown = true;
+    if (this.io3) this.io3.disconnect();
+    this.setState({ sec3In: true });
+    [0, 1].forEach((i) => {
+      this.introTimers.push(setTimeout(() => this.setState({ lines: i + 1 }), 250 + i * 180));
+    });
+  };
+
+  prosess = React.createRef();
+  pathEl = React.createRef();
+
+  measurePath = () => {
+    const sec = this.prosess.current;
+    if (!sec) return;
+    const track = sec.querySelector('[data-track]');
+    const nodes = Array.from(sec.querySelectorAll('[data-node]'));
+    if (!track || nodes.length < 2) return;
+    const tr = track.getBoundingClientRect();
+    const pts = nodes.map(n => {
+      const r = n.getBoundingClientRect();
+      return { x: r.left - tr.left + r.width / 2, y: r.top - tr.top + r.height / 2, r: r.width / 2 };
+    });
+    const w = tr.width;
+    const clampX = (x) => Math.max(-30, Math.min(w + 30, x));
+    const info = nodes.map((n, i) => {
+      const br = n.parentElement.getBoundingClientRect();
+      const c = pts[i];
+      const left = br.left - tr.left, right = br.right - tr.left;
+      const onLeft = c.x < left + br.width / 2;
+      return {
+        c: c,
+        onLeft: onLeft,
+        gx: clampX(onLeft ? c.x - (c.r + 12) : c.x + (c.r + 12)),
+        edge: { x: c.x + (onLeft ? -c.r : c.r), y: c.y },
+        top: br.top - tr.top,
+        bottom: br.bottom - tr.top
+      };
+    });
+
+    // per pair: vertical descent in the gutter (on-path clearance point), then a broad S across
+    let d = 'M' + info[0].edge.x.toFixed(1) + ',' + info[0].edge.y.toFixed(1);
+    for (let i = 0; i < info.length - 1; i++) {
+      const a = info[i], b = info[i + 1];
+      let clearY = Math.min(a.bottom + 46, b.top - 30);
+      clearY = Math.max(clearY, a.edge.y + 60);
+      clearY = Math.min(clearY, b.edge.y - 60);
+      const dy = b.edge.y - clearY;
+      const bowOut = a.onLeft ? -22 : 22;
+      d += ' C ' + (a.gx + bowOut).toFixed(1) + ',' + (a.edge.y + (clearY - a.edge.y) * 0.45).toFixed(1) +
+           ' ' + (a.gx + bowOut).toFixed(1) + ',' + (clearY - (clearY - a.edge.y) * 0.25).toFixed(1) +
+           ' ' + a.gx.toFixed(1) + ',' + clearY.toFixed(1);
+      const lean = (b.gx - a.gx) * 0.12;
+      d += ' C ' + (a.gx + lean).toFixed(1) + ',' + (clearY + dy * 0.42).toFixed(1) +
+           ' ' + (b.gx - lean).toFixed(1) + ',' + (b.edge.y - dy * 0.42).toFixed(1) +
+           ' ' + b.edge.x.toFixed(1) + ',' + b.edge.y.toFixed(1);
+    }
+    if (d !== this.state.pathD) this.setState({ pathD: d, pathLen: 0 });
+  };
+
+  onScroll = () => {
+    if (this.raf) return;
+    this.raf = requestAnimationFrame(() => {
+      this.raf = null;
+      const om = this.sec3.current;
+      if (om && !this.state.sec3In && om.getBoundingClientRect().top < window.innerHeight * 0.85) this.revealOm();
+
+      const p = this.prosess.current;
+      if (p) {
+        const r = p.getBoundingClientRect();
+        const vh = window.innerHeight;
+        const nodes = p.querySelectorAll('[data-node]');
+        const last = nodes[nodes.length - 1];
+        const endY = last ? last.getBoundingClientRect().top : r.bottom;
+        const start = vh * 0.85 - r.top;
+        const span = Math.max(1, (endY - r.top) - vh * 0.25);
+        const prog = Math.max(0, Math.min(1, start / span));
+        if (Math.abs((this.state.pathProg || 0) - prog) > 0.004) this.setState({ pathProg: prog });
+      }
+      if (this.pathEl.current && this.state.pathD && !this.state.pathLen) {
+        try { this.setState({ pathLen: this.pathEl.current.getTotalLength() }); } catch (e) {}
+      }
+    });
+  };
+
+  onZoomClick = (e) => {
+    const img = e.target.closest && e.target.closest('img[data-zoomable]');
+    if (!img) return;
+    e.preventDefault();
+    this.setState({ zoomSrc: img.getAttribute('src'), zoomAlt: img.getAttribute('alt') || '' });
+  };
+
+  onZoomKey = (e) => {
+    if (e.key === 'Escape' && this.state.zoomSrc) this.setState({ zoomSrc: null });
+  };
+
+  componentDidMount() {
+    document.addEventListener('click', this.onZoomClick);
+    document.addEventListener('keydown', this.onZoomKey);
+    [[80, 1], [1300, 2], [1900, 3]].forEach(([ms, step]) => {
+      this.introTimers.push(setTimeout(() => this.setState({ step }), ms));
+    });
+    this.introTimers.push(setTimeout(() => this.setState({ step: 4 }), 3400));
+    this.introTimers.push(setTimeout(() => this.run(), 2600));
+
+    if (this.sec3.current) {
+      this.io3 = new IntersectionObserver((entries) => {
+        if (entries.some(e => e.isIntersecting)) this.revealOm();
+      }, { threshold: 0.15 });
+      this.io3.observe(this.sec3.current);
+    }
+    const targets = Array.from(document.querySelectorAll('[data-reveal]'));
+    targets.forEach((el, i) => {
+      el.style.transition = 'opacity .8s ease-out ' + (i % 4) * 90 + 'ms, transform .8s ease-out ' + (i % 4) * 90 + 'ms';
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(24px)';
+    });
+    this.ioReveal = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+          this.ioReveal.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+    targets.forEach((el) => this.ioReveal.observe(el));
+
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+    window.addEventListener('resize', this.onScroll);
+    this.onResize = () => { this.measurePath(); this.onScroll(); };
+    window.addEventListener('resize', this.onResize);
+    this.introTimers.push(setTimeout(this.onResize, 350));
+    this.introTimers.push(setTimeout(this.onResize, 1400));
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(this.onResize);
+    this.measurePath();
+    this.onScroll();
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', this.onZoomClick);
+    document.removeEventListener('keydown', this.onZoomKey);
+    if (this.io3) this.io3.disconnect();
+    if (this.ioReveal) this.ioReveal.disconnect();
+    if (this.timer) clearInterval(this.timer);
+    this.introTimers.forEach(clearTimeout);
+    window.removeEventListener('scroll', this.onScroll);
+    window.removeEventListener('resize', this.onScroll);
+    if (this.onResize) window.removeEventListener('resize', this.onResize);
+    if (this.raf) cancelAnimationFrame(this.raf);
+  }
+
+  run() {
+    if (this.timer) clearInterval(this.timer);
+    const step = this.props.staggerMs ?? 260;
+    this.timer = setInterval(() => {
+      this.setState(s => {
+        if (s.n >= 8) { clearInterval(this.timer); return s; }
+        const n = s.n + 1;
+        setTimeout(() => this.setState(st => ({ settled: Math.max(st.settled, n) })), 900);
+        return { n };
+      });
+    }, step);
+  }
+
+  closeZoom = () => this.setState({ zoomSrc: null });
+
+  zoomBlur = (src) => {
+    const p1 = ['p1-ukesplan', 'p1-brukerreise', 'p1-teamcanvas', 'p2-sortere-behov', 'p2-skisser', 'p3-komponenter', 'p3-layout', 'p3-testing'];
+    if (!src) return 'none';
+    if (src.indexOf('/r-') > -1) return 'blur(1.5px)';
+    return p1.some(n => src.indexOf(n) > -1) ? 'blur(1.5px)' : 'none';
+  };
+
+  renderVals() {
+    const n = this.state.n;
+    const drop = this.props.riseDistance ?? 22;
+    const step = this.state.step;
+    const script = step >= 3;
+    const vals = {
+      zoomImg: this.state.zoomSrc ? React.createElement('img', {
+        src: this.state.zoomSrc,
+        alt: this.state.zoomAlt || '',
+        style: { display: 'block', maxWidth: '100%', maxHeight: '82vh', width: 'auto', height: 'auto', filter: this.zoomBlur(this.state.zoomSrc), border: '3px solid #FAFAFA', borderRadius: '4px', boxShadow: '0 30px 80px rgba(0,0,0,.4)' }
+      }) : null,
+      zoomAlt: this.state.zoomAlt || '',
+      zoomDisplay: this.state.zoomSrc ? 'flex' : 'none',
+      closeZoom: this.closeZoom,
+      sec3: this.sec3,
+      prosess: this.prosess,
+      pathEl: this.pathEl,
+      pathD: this.state.pathD || '',
+      pathLen: this.state.pathLen || 4000,
+      pathOff: (this.state.pathLen || 4000) * (1 - (this.state.pathProg || 0)),
+      skillsWrap: this.skillsWrap,
+      stage: this.stage,
+      cardO: this.state.sec3In ? 1 : 0,
+      cardT: this.state.sec3In ? 'translateY(0px)' : 'translateY(40px)',
+      line0: (this.state.lines || 0) > 0 ? 1 : 0,
+      line1: (this.state.lines || 0) > 1 ? 1 : 0,
+      titleO: step >= 1 ? 1 : 0,
+      titleT: step >= 2 ? 'translateY(0vh) scale(1)' : 'translateY(6vh) scale(1.1)',
+      navO: step >= 4 ? 1 : 0,
+      chars: 'og velkommen til min portef\u00F8lje'.split('').map((ch, i) => ({
+        ch,
+        d: (i * 45) + 'ms',
+        o: script ? 1 : 0,
+        t: script ? 'translateY(0px) rotate(0deg)' : 'translateY(10px) rotate(-3deg)'
+      }))
+    };
+    for (let i = 0; i < 8; i++) {
+      const on = n > i;
+      const settled = this.state.settled > i;
+      const pop = this.props.popScale ?? 1.07;
+      vals['o' + i] = on ? 1 : 0;
+      vals['t' + i] = !on
+        ? 'scale(0.86) translateY(' + drop + 'px)'
+        : (settled ? 'scale(1) translateY(0px)' : 'scale(' + pop + ') translateY(0px)');
+    }
+    return vals;
+  }
+}
+</script>
+</body>
+</html>
